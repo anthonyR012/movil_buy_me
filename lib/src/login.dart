@@ -29,20 +29,18 @@ class _LoginState extends State<Login> {
        var url = Uri.parse('http://192.168.1.57/webservice/Search.php?case=login');
       var response = await http.post(url, body: {'searchEmail': _user.text, 'searchPass': _pass.text});
       if(response.statusCode==200 ){
-        print("ok");
+        
         String body = utf8.decode(response.bodyBytes);
         try{
           final jsonData  = jsonDecode(body); 
-          print('Response body: ${jsonData["response"]} ');
+         
           //NAVEGAR SEGUNDO FRAGMENTO
           Navigator.push(
-                      context, MaterialPageRoute(builder: (context) =>  ListPeditor(jsonData)));
+                      context, MaterialPageRoute(builder: (context) =>  ListPeditor(jsonData["response"])));
         }catch(e){
             _showMyDialog(this.context,"Tus credenciales no son correctas :( ");
             //  print("No encontro");
         }
-        
-       
       }
 
   }else{
@@ -87,7 +85,6 @@ class _LoginState extends State<Login> {
             icon: Icon(Icons.email),
             hintText: 'user@example.com',
             labelText: 'Correo electronico',
-            errorText: validatorInput(_user.text),
           ),
           onChanged: (value) {},
         ),
@@ -138,30 +135,30 @@ class _LoginState extends State<Login> {
   }
 
 
-    Widget _buildAlertDialog(String message) {
-        return AlertDialog(
-          title: Text('Notificación'),
-          content:
-              Text(message),
-          actions: <Widget>[
-          
-            ElevatedButton(
-                child: Text("Aceptar"),
-                 onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        ),
-                  ),
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.black12)
-                  ),
-            )
-          ],
-        );
-      }
+      Widget _buildAlertDialog(String message) {
+          return AlertDialog(
+            title: Text('Notificación'),
+            content:
+                Text(message),
+            actions: <Widget>[
+            
+              ElevatedButton(
+                  child: Text("Aceptar"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          ),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black12)
+                    ),
+              )
+            ],
+          );
+        }
 
    Future<void> _showMyDialog(BuildContext context,String message) async {
     return showDialog<void>(
@@ -170,13 +167,5 @@ class _LoginState extends State<Login> {
     );
   }
 
-  validatorInput(String text) {
-    
-       if (text.length < 5 && text.length > 0) {
-         print("carga");
-        return "Password should contains more then 5 character";
-      }
-      return null;
 
-  }
 }
