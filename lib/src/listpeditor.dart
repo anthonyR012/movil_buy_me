@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'PedidosPojo.dart';
+import 'detailPeditor.dart';
 
 
 class ListPeditor extends StatefulWidget {
@@ -16,7 +17,7 @@ class _ListPeditorState extends State<ListPeditor> {
   final userInformation;
   _ListPeditorState(this.userInformation);
   List<ListTile> _misPedidos = [];  
-
+  List _misPedidosArray = [];
   @override
   void initState() {
    print("carga actividad "+userInformation.toString());
@@ -30,18 +31,60 @@ class _ListPeditorState extends State<ListPeditor> {
       appBar: AppBar(
         title: Text('Pedidos '+userInformation['Ciudad']+''),
       ),
-      body: ListView(
+      body:  
+      ListView(
         children: _misPedidos,
+        
       )
       );
 
     
   }
 
+  void _detallePedido(String id){
+    late PedidosPojo pedido;
+    List<ProductPojo> productos = [];
+    for (var i = 0; i < _misPedidosArray.length; i++) {
+     
+      if(_misPedidosArray[i]["id"] == id){
+      for (var u = 0; u <  _misPedidosArray[i]["productos"].length; u++) {
 
+          var img =  _misPedidosArray[i]["productos"][u]["imagen_producto"].replaceAll("localhost","192.168.1.50");
+
+          ProductPojo producto = new ProductPojo(
+            _misPedidosArray[i]["productos"][u]["id_producto"],
+           _misPedidosArray[i]["productos"][u]["nombre_producto"],
+           _misPedidosArray[i]["productos"][u]["cantidad_producto"],
+           _misPedidosArray[i]["productos"][u]["precio_producto"],
+           img);
+          
+            productos.add(producto);
+        
+            print(producto.imagen_producto);
+      }
+        
+        pedido = PedidosPojo(_misPedidosArray[i]["id"],
+        _misPedidosArray[i]["localidad"],
+        _misPedidosArray[i]["estado"],
+         _misPedidosArray[i]["usuario"],
+         _misPedidosArray[i]["id_usuario"],
+          _misPedidosArray[i]["direccion"],
+          _misPedidosArray[i]["tomado_en"],
+          _misPedidosArray[i]["entregar_en"],
+           _misPedidosArray[i]["pago"],
+           _misPedidosArray[i]["cantidad_productos"],
+           _misPedidosArray[i]["total_a_pagar"],
+            productos);
+
+      }
+      
+    }
+     Navigator.push(
+                      context, MaterialPageRoute(builder: (context) =>  DetailPeditor(pedido)));
+  }
     void _getPeditor() async {
     
-       var url = Uri.parse('http://192.168.1.57/WEbservice/querys.php?case=pedidos');
+       var url = Uri.parse('http://192.168.1.50/WEbservice/querys.php?case=pedidos');
       var response = await http.get(url);
       
       if(response.statusCode==200 ){
@@ -50,26 +93,36 @@ class _ListPeditorState extends State<ListPeditor> {
         try{
           String body = utf8.decode(response.bodyBytes);
           
-           var jsonData  = jsonDecode(body); 
+         var jsonData  = jsonDecode(body); 
           // print(jsonData["response"]);
-         var responseArray = jsonData["response"];
-          for(int i=0; i<responseArray.length; i++){
+         _misPedidosArray = jsonData["response"];
+          for(int i=0; i<_misPedidosArray.length; i++){
                     // print(jsonData["response"][0]["localidad"]);
 
 
+                    
                     _misPedidos.add(ListTile(
-                            title: Text('Usuario: '+responseArray[i]["usuario"]+ ' Pedido de: '+responseArray[i]["localidad"]),
-                            subtitle: Text('Estado: '+responseArray[i]["estado"]+' Total a pagar: '+responseArray[i]["total_a_pagar"]),
+                            title: Text('Usuario: '+_misPedidosArray[i]["usuario"]+ ' Pedido de: '+_misPedidosArray[i]["localidad"]),
+                            subtitle: Text('Estado: '+_misPedidosArray[i]["estado"]+' Total a pagar: '+_misPedidosArray[i]["total_a_pagar"]),
                             leading: const CircleAvatar(
                               child: Image(
                                 image: AssetImage('images/logo.png'),
                               ),
                             ),
-                            trailing: const Icon(Icons.arrow_forward_ios),
+                            trailing:  ElevatedButton(
+                              // color: Colors.transparent,
+                                onPressed: () {
+                                  _detallePedido(_misPedidosArray[i]["id"]);
+                                },
+                                child: Icon(Icons.arrow_forward_ios),
+                
+                              )
+                            
+                            
                           ));
 
                   }
-        print("Los pedidos son: "+responseArray.toString());
+        print("Los pedidos son: "+_misPedidosArray.toString());
         
         }catch(e){
         print("ob "+e.toString());
@@ -82,88 +135,3 @@ class _ListPeditorState extends State<ListPeditor> {
   }
 }
 
-// class ListPeditor extends StatelessWidget {
-//   final userInformation;
-//   List<ListTile> _misPedidos = [];  
-//   ListPeditor(this.userInformation,{Key? key}) : super(key: key);
-
-//   @override
-//   void initState() {
-    
-//     super.initState();
-//   }
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//      String city = userInformation["Ciudad"].toString();
-     
-      
-//       print("peditors "+_misPedidos.toString());
-//      return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Pedidos '+city+''),
-//       ),
-//       body: ListViewServer());
-
-    
-//   }
- 
-
-//   Widget ListViewServer(){
-
-//     return ListView(
-//         children: _misPedidos,
-//       );
-//   }
-
-//   List<Widget> ListaPedidos(){
-
-//     _getPeditor();
-   
-//     // print("dataaaa "+dataListTite.toString());
-//     return [];    
-//   }
-
-//   void _getPeditor() async {
-    
-//        var url = Uri.parse('http://192.168.1.57/WEbservice/querys.php?case=pedidos');
-//       var response = await http.get(url);
-      
-//       if(response.statusCode==200 ){
-        
-       
-//         try{
-//           String body = utf8.decode(response.bodyBytes);
-          
-//            var jsonData  = jsonDecode(body); 
-//           // print(jsonData["response"]);
-         
-//           for(int i=0; i<jsonData["response"].length; i++){
-//                     // print(jsonData["response"][0]["localidad"]);
-
-
-//                     _misPedidos.add(const ListTile(
-//                             title: Text('Usuario: '),
-//                             subtitle: Text('Analisis y desarrollo de sistemas de información'),
-//                             leading: CircleAvatar(
-//                               child: Image(
-//                                 image: AssetImage('images/logo.png'),
-//                               ),
-//                             ),
-//                             trailing: Icon(Icons.arrow_forward_ios),
-//                           ));
-
-//                   }
-//         print("Los pedidos son: "+_misPedidos.length.toString());
-        
-//         }catch(e){
-//         print("ob "+e.toString());
-//          throw 'Err '+e.toString();
-
-//         }
-//       }else{
-//         throw 'Err connection internet';
-//       }
-//   }
-// }
