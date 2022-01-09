@@ -1,8 +1,14 @@
-import 'package:flutter/material.dart';
+
+
+ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'PedidosPojo.dart';
+import 'cardPeditor.dart';
 import 'detailPeditor.dart';
+
+
+
 
 
 class ListPeditor extends StatefulWidget {
@@ -18,28 +24,39 @@ class _ListPeditorState extends State<ListPeditor> {
   _ListPeditorState(this.userInformation);
   List<ListTile> _misPedidos = [];  
   List _misPedidosArray = [];
+   List<PedidosPojo> productosArray = [];
   @override
   void initState() {
-   print("carga actividad "+userInformation.toString());
+   
     super.initState();
     _getPeditor();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+    Widget build(BuildContext context) {
+      
+      return Scaffold(
       appBar: AppBar(
         title: Text('Pedidos '+userInformation['Ciudad']+''),
       ),
-      body:  
-      ListView(
-        children: _misPedidos,
-        
-      )
+      body: 
+      ListView.builder(
+        shrinkWrap: true,
+        itemCount: productosArray.length,
+        itemBuilder: (BuildContext context,int index){
+          return Dismissible(
+            key: ObjectKey(productosArray[index]),
+          child: CardPeditor(productosArray[index]),
+          onDismissed: (d){
+            setState(() {
+                productosArray.removeAt(index);
+            });
+          });
+      })
       );
+    }
 
-    
-  }
+
 
   void _detallePedido(String id){
     late PedidosPojo pedido;
@@ -84,7 +101,7 @@ class _ListPeditorState extends State<ListPeditor> {
   }
     void _getPeditor() async {
     
-       var url = Uri.parse('http://192.168.1.50/WEbservice/querys.php?case=pedidos');
+       var url = Uri.parse('http://192.168.1.54/WEbservice/querys.php?case=pedidos');
       var response = await http.get(url);
       
       if(response.statusCode==200 ){
@@ -96,33 +113,42 @@ class _ListPeditorState extends State<ListPeditor> {
          var jsonData  = jsonDecode(body); 
           // print(jsonData["response"]);
          _misPedidosArray = jsonData["response"];
-          for(int i=0; i<_misPedidosArray.length; i++){
-                    // print(jsonData["response"][0]["localidad"]);
 
+           List<ProductPojo> productos = [];
+           late PedidosPojo pedido;
+    for (var i = 0; i < _misPedidosArray.length; i++) {
+    
+      for (var u = 0; u <  _misPedidosArray[i]["productos"].length; u++) {
 
-                    
-                    _misPedidos.add(ListTile(
-                            title: Text('Usuario: '+_misPedidosArray[i]["usuario"]+ ' Pedido de: '+_misPedidosArray[i]["localidad"]),
-                            subtitle: Text('Estado: '+_misPedidosArray[i]["estado"]+' Total a pagar: '+_misPedidosArray[i]["total_a_pagar"]),
-                            leading: const CircleAvatar(
-                              child: Image(
-                                image: AssetImage('images/logo.png'),
-                              ),
-                            ),
-                            trailing:  ElevatedButton(
-                              // color: Colors.transparent,
-                                onPressed: () {
-                                  _detallePedido(_misPedidosArray[i]["id"]);
-                                },
-                                child: Icon(Icons.arrow_forward_ios),
-                
-                              )
-                            
-                            
-                          ));
+          var img =  _misPedidosArray[i]["productos"][u]["imagen_producto"].replaceAll("localhost","192.168.1.54");
+ 
+          ProductPojo producto = new ProductPojo(
+            _misPedidosArray[i]["productos"][u]["id_producto"],
+           _misPedidosArray[i]["productos"][u]["nombre_producto"],
+           _misPedidosArray[i]["productos"][u]["cantidad_producto"],
+           _misPedidosArray[i]["productos"][u]["precio_producto"],
+           img);
+          
+            productos.add(producto);
+        
+           
+      }
+        
+        pedido = PedidosPojo(_misPedidosArray[i]["id"],
+        _misPedidosArray[i]["localidad"],
+        _misPedidosArray[i]["estado"],
+         _misPedidosArray[i]["usuario"],
+         _misPedidosArray[i]["id_usuario"],
+          _misPedidosArray[i]["direccion"],
+          _misPedidosArray[i]["tomado_en"],
+          _misPedidosArray[i]["entregar_en"],
+           _misPedidosArray[i]["pago"],
+           _misPedidosArray[i]["cantidad_productos"],
+           _misPedidosArray[i]["total_a_pagar"],
+            productos);
 
-                  }
-        print("Los pedidos son: "+_misPedidosArray.toString());
+      productosArray.add(pedido); 
+    }
         
         }catch(e){
         print("ob "+e.toString());
