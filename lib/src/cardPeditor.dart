@@ -22,7 +22,7 @@ class CardPeditor extends StatelessWidget {
           Container(
             height: 144.0,
             width: 500.0, 
-            color: Colors.amber,
+            color: Colors.blueGrey[900],
             child: Image.asset("images/logo.png",height: 144.0,width: 160.0),
           ),
           padding(Text(peditor.usuario+" "+peditor.pago,style: TextStyle(fontSize: 18.0))),

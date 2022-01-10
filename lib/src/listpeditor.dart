@@ -1,13 +1,13 @@
 
 
- import 'package:flutter/material.dart';
+ import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'PedidosPojo.dart';
 import 'cardPeditor.dart';
-import 'detailPeditor.dart';
-
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 
@@ -21,16 +21,33 @@ class ListPeditor extends StatefulWidget {
 
 class _ListPeditorState extends State<ListPeditor> {
   final userInformation;
+   Duration sec = const Duration(seconds:3);
   _ListPeditorState(this.userInformation);
   List<ListTile> _misPedidos = [];  
   List _misPedidosArray = [];
    List<PedidosPojo> productosArray = [];
+   bool _isReadyList = false; 
+   Widget idReady = Center(
+          child:SpinKitRotatingCircle(
+            color: Colors.white,
+            size: 50.0,
+          ),
+        );
+
+    late Timer timer;
+
+
   @override
   void initState() {
    
     super.initState();
+    
     _getPeditor();
+    timer =  Timer.periodic(sec, (Timer t) => _returnWidge());
+     
   }
+
+   
 
   @override
     Widget build(BuildContext context) {
@@ -39,66 +56,36 @@ class _ListPeditorState extends State<ListPeditor> {
       appBar: AppBar(
         title: Text('Pedidos '+userInformation['Ciudad']+''),
       ),
-      body: 
-      ListView.builder(
-        shrinkWrap: true,
-        itemCount: productosArray.length,
-        itemBuilder: (BuildContext context,int index){
-          return Dismissible(
-            key: ObjectKey(productosArray[index]),
-          child: CardPeditor(productosArray[index]),
-          onDismissed: (d){
-            setState(() {
-                productosArray.removeAt(index);
-            });
-          });
-      })
+      backgroundColor: Colors.blueGrey,
+      body: idReady,
       );
     }
 
+  void _returnWidge(){
+       print("es: "+_isReadyList.toString());
+      if(_isReadyList!=false){
+          setState(() {
+            idReady =  
+              ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: productosArray.length,
+                      itemBuilder: (BuildContext context,int index){
+                        return Dismissible(
+                          key: ObjectKey(productosArray[index]),
+                        child: CardPeditor(productosArray[index]),
+                        onDismissed: (d){
+                          setState(() {
+                              productosArray.removeAt(index);
+                          });
+                        });
+                      });
+         
 
-
-  void _detallePedido(String id){
-    late PedidosPojo pedido;
-    List<ProductPojo> productos = [];
-    for (var i = 0; i < _misPedidosArray.length; i++) {
-     
-      if(_misPedidosArray[i]["id"] == id){
-      for (var u = 0; u <  _misPedidosArray[i]["productos"].length; u++) {
-
-          var img =  _misPedidosArray[i]["productos"][u]["imagen_producto"].replaceAll("localhost","192.168.1.50");
-
-          ProductPojo producto = new ProductPojo(
-            _misPedidosArray[i]["productos"][u]["id_producto"],
-           _misPedidosArray[i]["productos"][u]["nombre_producto"],
-           _misPedidosArray[i]["productos"][u]["cantidad_producto"],
-           _misPedidosArray[i]["productos"][u]["precio_producto"],
-           img);
-          
-            productos.add(producto);
-        
-            print(producto.imagen_producto);
-      }
-        
-        pedido = PedidosPojo(_misPedidosArray[i]["id"],
-        _misPedidosArray[i]["localidad"],
-        _misPedidosArray[i]["estado"],
-         _misPedidosArray[i]["usuario"],
-         _misPedidosArray[i]["id_usuario"],
-          _misPedidosArray[i]["direccion"],
-          _misPedidosArray[i]["tomado_en"],
-          _misPedidosArray[i]["entregar_en"],
-           _misPedidosArray[i]["pago"],
-           _misPedidosArray[i]["cantidad_productos"],
-           _misPedidosArray[i]["total_a_pagar"],
-            productos);
-
+         });
+        timer.cancel();
       }
       
-    }
-     Navigator.push(
-                      context, MaterialPageRoute(builder: (context) =>  DetailPeditor(pedido)));
-  }
+  } 
     void _getPeditor() async {
     
        var url = Uri.parse('http://192.168.1.54/WEbservice/querys.php?case=pedidos');
@@ -148,6 +135,7 @@ class _ListPeditorState extends State<ListPeditor> {
             productos);
 
       productosArray.add(pedido); 
+      _isReadyList = true;
     }
         
         }catch(e){
