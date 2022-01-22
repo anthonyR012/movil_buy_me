@@ -18,7 +18,9 @@ class _LoginState extends State<Login> {
   final _user = TextEditingController();
   final _pass = TextEditingController();
 
-
+  /**
+   * Consulta api, si concuerdan las credenciales
+   */
   Future _getState() async {
 
   if(_user.text.length > 5 
@@ -26,7 +28,7 @@ class _LoginState extends State<Login> {
   && _pass.text.length > 3 
   && _pass.text.isNotEmpty ){
 
-       var url = Uri.parse('http://192.168.1.54/webservice/Search.php?case=login');
+       var url = Uri.parse('http://192.168.1.50/webservice/Search.php?case=login');
       var response = await http.post(url, body: {'searchEmail': _user.text, 'searchPass': _pass.text});
       if(response.statusCode==200 ){
         
@@ -72,7 +74,9 @@ class _LoginState extends State<Login> {
             ))));
   }
 
-
+  /**
+   * Metodos privados para widgets de campos login
+   */
   Widget _userTextField() {
     return StreamBuilder(
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -134,7 +138,9 @@ class _LoginState extends State<Login> {
     });
   }
 
-
+  /**
+   * Retorna alerta
+   */
       Widget _buildAlertDialog(String message) {
           return AlertDialog(
             title: Text('Notificación'),

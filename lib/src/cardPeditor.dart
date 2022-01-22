@@ -4,7 +4,9 @@ import 'detailPeditor.dart';
 
 
 class CardPeditor extends StatelessWidget {
-  
+  /**
+   * Recibe el pedido por constructor
+   */
   PedidosPojo peditor;
   CardPeditor(this.peditor);
 
@@ -34,7 +36,7 @@ class CardPeditor extends StatelessWidget {
       ),
     ));
   }
-
+  
   Widget padding(Widget widget){
     return Padding(padding: EdgeInsets.all(7.0),child: widget);
   }
