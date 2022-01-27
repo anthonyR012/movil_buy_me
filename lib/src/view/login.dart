@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:gobuyme/src/constants.dart';
 import 'package:http/http.dart' as http;
 import 'listpeditor.dart';
 
@@ -28,7 +29,7 @@ class _LoginState extends State<Login> {
   && _pass.text.length > 3 
   && _pass.text.isNotEmpty ){
 
-       var url = Uri.parse('http://192.168.1.50/webservice/Search.php?case=login');
+       var url = Uri.parse(BASE_URL+'webservice/Search.php?case=login');
       var response = await http.post(url, body: {'searchEmail': _user.text, 'searchPass': _pass.text});
       if(response.statusCode==200 ){
         

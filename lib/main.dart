@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gobuyme/src/login.dart';
+import 'package:gobuyme/src/view/login.dart';
 
 void main() => runApp(MyApp());
 

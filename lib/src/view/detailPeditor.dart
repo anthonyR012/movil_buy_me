@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'PedidosPojo.dart';
+import '../model/PedidosPojo.dart';
 
 class DetailPeditor extends StatelessWidget {
   final PedidosPojo pedido;

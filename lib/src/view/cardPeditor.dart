@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'PedidosPojo.dart';
+import '../model/PedidosPojo.dart';
 import 'detailPeditor.dart';
 
 

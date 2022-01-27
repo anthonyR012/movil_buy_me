@@ -13,6 +13,7 @@ class PedidosPojo {
   final String total_a_pagar;
   final String pago;
   final List<ProductPojo> productos;
+ 
 
   PedidosPojo(this.id, this.localidad,this.estado, this.usuario,this.id_usuario, this.direccion,this.tomado_en,this.entregar_en,this.pago, this.cantidad_productos,this.total_a_pagar, this.productos);
 
