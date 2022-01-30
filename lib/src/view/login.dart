@@ -1,10 +1,8 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gobuyme/src/constants.dart';
 import 'package:http/http.dart' as http;
 import 'listpeditor.dart';
-
 
 class Login extends StatefulWidget {
   static String id = "login";
@@ -14,7 +12,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  
   late Future _loginNow;
   final _user = TextEditingController();
   final _pass = TextEditingController();
@@ -23,43 +20,39 @@ class _LoginState extends State<Login> {
    * Consulta api, si concuerdan las credenciales
    */
   Future _getState() async {
-
-  if(_user.text.length > 5 
-  && _user.text.isNotEmpty
-  && _pass.text.length > 3 
-  && _pass.text.isNotEmpty ){
-
-       var url = Uri.parse(BASE_URL+'webservice/Search.php?case=login');
-      var response = await http.post(url, body: {'searchEmail': _user.text, 'searchPass': _pass.text});
-      if(response.statusCode==200 ){
-        
+    if (_user.text.length > 5 &&
+        _user.text.isNotEmpty &&
+        _pass.text.length > 3 &&
+        _pass.text.isNotEmpty) {
+      var url = Uri.parse(BASE_URL + 'webservice/Search.php?case=login');
+      
+      var response = await http.post(url,
+          body: {'searchEmail': _user.text, 'searchPass': _pass.text});
+      if (response.statusCode == 200) {
         String body = utf8.decode(response.bodyBytes);
-        try{
-          final jsonData  = jsonDecode(body); 
-         
+        try {
+          final jsonData = jsonDecode(body);
+
           //NAVEGAR SEGUNDO FRAGMENTO
           Navigator.push(
-                      context, MaterialPageRoute(builder: (context) =>  ListPeditor(jsonData["response"])));
-        }catch(e){
-            _showMyDialog(this.context,"Tus credenciales no son correctas :( ");
-            //  print("No encontro");
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ListPeditor(jsonData["response"])));
+        } catch (e) {
+          _showMyDialog(this.context, "Tus credenciales no son correctas :( ");
+          //  print("No encontro");
         }
       }
-
-  }else{
-   _showMyDialog(this.context,"No pueden haber campos vacios");
+    } else {
+      _showMyDialog(this.context, "No pueden haber campos vacios");
+    }
   }
-
- 
-  
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: COLORPRIMARY,
             body: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -129,8 +122,8 @@ class _LoginState extends State<Login> {
         style: ButtonStyle(
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                ),
+              borderRadius: BorderRadius.circular(18.0),
+            ),
           ),
           backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
           elevation: MaterialStateProperty.all(15),
@@ -142,37 +135,33 @@ class _LoginState extends State<Login> {
   /**
    * Retorna alerta
    */
-      Widget _buildAlertDialog(String message) {
-          return AlertDialog(
-            title: Text('Notificación'),
-            content:
-                Text(message),
-            actions: <Widget>[
-            
-              ElevatedButton(
-                  child: Text("Aceptar"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          ),
-                    ),
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black12)
-                    ),
-              )
-            ],
-          );
-        }
+  Widget _buildAlertDialog(String message) {
+    return AlertDialog(
+      title: Text('Notificación'),
+      content: Text(message),
+      actions: <Widget>[
+        ElevatedButton(
+          child: Text("Aceptar"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+              ),
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.black12)),
+        )
+      ],
+    );
+  }
 
-   Future<void> _showMyDialog(BuildContext context,String message) async {
+  Future<void> _showMyDialog(BuildContext context, String message) async {
     return showDialog<void>(
       context: context,
       builder: (_) => _buildAlertDialog(message),
     );
   }
-
-
 }

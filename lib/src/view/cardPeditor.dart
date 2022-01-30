@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants.dart';
 import '../model/PedidosPojo.dart';
 import 'detailPeditor.dart';
 
@@ -24,7 +25,7 @@ class CardPeditor extends StatelessWidget {
           Container(
             height: 144.0,
             width: 500.0, 
-            color: Colors.blueGrey[900],
+            color: Colors.grey,
             child: Image.asset("images/logo.png",height: 144.0,width: 160.0),
           ),
           padding(Text(peditor.usuario+" "+peditor.pago,style: TextStyle(fontSize: 18.0))),
