@@ -4,6 +4,7 @@ import 'package:gobuyme/src/constants.dart';
 import 'package:http/http.dart' as http;
 import 'listpeditor.dart';
 
+
 class Login extends StatefulWidget {
   static String id = "login";
 
@@ -51,9 +52,20 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-            backgroundColor: COLORPRIMARY,
-            body: Center(
+        child:   
+        Scaffold(
+            body: Container(
+               decoration:const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops:ARRAYHEXADECIMAL,
+              colors: ARRAYCOLORS,
+            )
+          ),
+            child: 
+            Center(
+              
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -65,7 +77,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 20.0),
                 _bottonLogin()
               ],
-            ))));
+            )))));
   }
 
   /**

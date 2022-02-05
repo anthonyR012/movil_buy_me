@@ -153,13 +153,25 @@ class _ListPeditorState extends State<ListPeditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
         appBar: AppBar(
-          backgroundColor: COLORPRIMARY,
+          backgroundColor: COLORSECONDARY,
           title: Text('Pedidos ' + userInformation['Ciudad'] + ''),
         ),
-        backgroundColor: COLORPRIMARY,
-        body: _createWidgeListFuture());
+        body:Container(
+          height: 900,
+          decoration:const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops:ARRAYHEXADECIMAL,
+              colors: ARRAYCOLORS,
+            )
+          ),
+          child:_createWidgeListFuture()),
+        ));
+        
   }
 
   /**
