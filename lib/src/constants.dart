@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-const COLORPRIMARY = const Color(0xffC7BF80); 
+const COLORPRIMARY = const Color(0xffEB6B52); 
 const COLORSECONDARY = const Color(0xffEB6B52); 
 const ARRAYCOLORS = [Colors.red,
                 Colors.yellow,

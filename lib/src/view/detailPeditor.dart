@@ -17,12 +17,10 @@ class _DetailPeditorState extends State<DetailPeditor> {
  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child: Scaffold(
         body: Column(
           children: [
             Container(
-              height: 250,
-              width: 500,
               padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               margin: EdgeInsets.only(left: 5, top: 30, right: 0, bottom: 0),
               decoration: const BoxDecoration(
@@ -31,7 +29,7 @@ class _DetailPeditorState extends State<DetailPeditor> {
               child: Image.asset("images/baner.jpg"),
             ),
             containerWidge('Detalle del pedido ', Icons.trip_origin_sharp, 26,
-                Colors.white),
+                Colors.black),
             containerWidge(
                 widget.pedido.usuario + " ", Icons.person, 20, Colors.black),
             containerWidge(
@@ -39,7 +37,7 @@ class _DetailPeditorState extends State<DetailPeditor> {
             createCarrousel(),
             containerWidge("Cancela "+ widget.pedido.total_a_pagar+" Pesos",Icons.attach_money_outlined,23,Colors.black)
           ],
-        ));
+        )));
   }
 
   Widget createCarrousel() {
