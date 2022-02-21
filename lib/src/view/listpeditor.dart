@@ -44,7 +44,7 @@ class _ListPeditorState extends State<ListPeditor> {
    */
   Future<List<PedidosPojo>> _getPeditorFuture() async {
     var url = Uri.parse(
-        BASE_URL + 'WEbservice/search.php?case=pedidos&searchState=activo');
+        BASE_URL + 'search.php?case=pedidos&searchState=activo');
     var response = await http.get(url);
     List<PedidosPojo> pedidosCompletos = [];
 
@@ -276,7 +276,7 @@ class _ListPeditorState extends State<ListPeditor> {
 
   void _pedidorFinished(id) async {
     var url =
-        Uri.parse(BASE_URL + 'WEbservice/update.php?case=entregado&id=' + id);
+        Uri.parse(BASE_URL + 'update.php?case=entregado&id=' + id);
     print(url);
     var response = await http.get(url);
     List<PedidosPojo> pedidosCompletos = [];

@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
         _user.text.isNotEmpty &&
         _pass.text.length > 3 &&
         _pass.text.isNotEmpty) {
-      var url = Uri.parse(BASE_URL + 'webservice/Search.php?case=login');
+      var url = Uri.parse(BASE_URL + 'Search.php?case=login');
       
       var response = await http.post(url,
           body: {'searchEmail': _user.text, 'searchPass': _pass.text});
