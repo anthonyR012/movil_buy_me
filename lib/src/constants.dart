@@ -16,5 +16,5 @@ const ARRAYHEXADECIMAL = [
 
 
                 
-const IP = "192.168.1.59";
-const BASE_URL = "http://"+IP+"/webservice/"; 
+const IP = "buyme.hotmarketing.info";
+const BASE_URL = "https://"+IP+"/WebServices/"; 
