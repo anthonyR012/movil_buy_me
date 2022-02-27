@@ -17,4 +17,6 @@ const ARRAYHEXADECIMAL = [
 
                 
 const IP = "buyme.hotmarketing.info";
+//  const IP = "192.168.1.53";
+
 const BASE_URL = "https://"+IP+"/WebServices/"; 

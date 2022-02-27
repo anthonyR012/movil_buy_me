@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gobuyme/src/constants.dart';
@@ -186,17 +187,18 @@ class _ListPeditorState extends State<ListPeditor> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             print(snapshot.data);
-            pedidosDimisible = countData(snapshot.data);
 
+            pedidosDimisible = countData(snapshot.data);
+          
             isReadyUpdate = false;
             return RefreshIndicator(
                 backgroundColor: Colors.blue,
                 displacement: 40.0,
                 strokeWidth: 4,
                 onRefresh: () {
-                  _pedidos = _getPeditorFuture();
+                  
                   setState(() {
-                    _pedidos;
+                    _pedidos = _getPeditorFuture();
                   });
                   return _pedidos;
                 },
@@ -205,7 +207,7 @@ class _ListPeditorState extends State<ListPeditor> {
                     itemCount: pedidosDimisible.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Dismissible(
-                          key: ObjectKey(pedidosDimisible[index]),
+                          key: UniqueKey(),
                           child: CardPeditor(pedidosDimisible[index]),
                           confirmDismiss: (direction) {
                             return showDialog(
@@ -236,14 +238,7 @@ class _ListPeditorState extends State<ListPeditor> {
                                         ]));
                           },
                           onDismissed: (d) {
-                            _pedidos = _getPeditorFuture();
-                            new Future.delayed(const Duration(seconds: 5), () {
-                              setState(() {
-                                _pedidos;
-
-                                pedidosDimisible.removeAt(index);
-                              });
-                            });
+                        
 
                             Scaffold.of(context).showSnackBar(
                                 SnackBar(content: Text("Completado")));
@@ -290,6 +285,10 @@ class _ListPeditorState extends State<ListPeditor> {
         isReadyUpdate = true;
         var jsonData = jsonDecode(body);
         var resulset = jsonData["response"];
+        //  _pedidos = _getPeditorFuture();
+        //                   setState(() {
+        //                     _pedidos;
+        //                   }); 
         //  if(resulset.response=="update complete"){
         //    print("Actualizacion completa");
         //  }else{

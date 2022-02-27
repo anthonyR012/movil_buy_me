@@ -33,13 +33,18 @@ class _LoginState extends State<Login> {
         String body = utf8.decode(response.bodyBytes);
         try {
           final jsonData = jsonDecode(body);
-
-          //NAVEGAR SEGUNDO FRAGMENTO
-          Navigator.push(
+          print(jsonData["response"]);
+          if(jsonData["response"]["response"]!="No_found_user" && jsonData["response"]["response"]!="Login_failed"){
+                Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ListPeditor(jsonData["response"])));
-        } catch (e) {
+     
+          }else{
+             _showMyDialog(this.context, "Tus credenciales no son correctas :( ");
+          }
+          //NAVEGAR SEGUNDO FRAGMENTO
+          } catch (e) {
           _showMyDialog(this.context, "Tus credenciales no son correctas :( ");
           //  print("No encontro");
         }
